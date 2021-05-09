@@ -34,6 +34,7 @@
         {
             EventHandlers.Config = this.Config;
             Events.Scp096.AddingTarget += EventHandlers.OnAddingTarget;
+            Events.Server.ReloadedConfigs += OnReloadedConfigs;
             base.OnEnabled();
         }
 
@@ -41,7 +42,10 @@
         public override void OnDisabled()
         {
             Events.Scp096.AddingTarget -= EventHandlers.OnAddingTarget;
+            Events.Server.ReloadedConfigs -= OnReloadedConfigs;
             base.OnDisabled();
         }
+
+        private void OnReloadedConfigs() => EventHandlers.Config = this.Config;
     }
 }
