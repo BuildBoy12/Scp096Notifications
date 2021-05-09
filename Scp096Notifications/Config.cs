@@ -1,22 +1,43 @@
-﻿using Exiled.API.Interfaces;
-using System.Collections.Generic;
-using System.ComponentModel;
-
-namespace Scp096Notifications
+﻿namespace Scp096Notifications
 {
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using Exiled.API.Interfaces;
+
+    /// <inheritdoc cref="IConfig"/>
     public class Config : IConfig
     {
+        /// <inheritdoc />
         public bool IsEnabled { get; set; } = true;
-        [Description("Determines whether or not people who view SCP-096's face will be notified.")]
-        public bool Enable096SeenMessage { get; set; } = true;
-        [Description("Determines whether or not SCP-096 will be notified everytime somebody views his face.")]
-        public bool Enable096NewTargetMessage { get; set; } = true;
-        [Description("The message to show users who become a target of SCP-096.")]
-        public string Scp096SeenMessage { get; set; } = "You are a target of SCP-096!";
-        [Description("The message to show SCP-096 when he gains a new target.")]
-        public string Scp096NewTargetMessage { get; set; } = "<b>{name}</b> has viewed your face! They are a <b>{class}</b>.";
 
-        [Description("Change the display strings of each class (applies to SCP-096'S notification).")]
+        /// <summary>
+        /// Gets or sets a value indicating whether people who view Scp096's face will be notified.
+        /// </summary>
+        [Description("Whether people who view Scp096's face will be notified.")]
+        public bool Enable096SeenMessage { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets the message to show people who become a target of Scp096.
+        /// </summary>
+        [Description("The message to show people who become a target of Scp096.")]
+        public string Scp096SeenMessage { get; set; } = "You are a target of SCP-096!";
+
+        /// <summary>
+        /// Gets or sets a value indicating whether Scp096 will be notified when someone views their face.
+        /// </summary>
+        [Description("Whether Scp096 will be notified when someone views their face.")]
+        public bool Enable096NewTargetMessage { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets the message to show Scp096 when they gain a target.
+        /// </summary>
+        [Description("The message to show Scp096 when they gain a target.")]
+        public string Scp096NewTargetMessage { get; set; } = "<b>$name</b> has viewed your face! They are a <b>$class</b>.";
+
+        /// <summary>
+        /// Gets or sets a collection of roles and their respective translations.
+        /// </summary>
+        [Description("Change the display strings of each class (applies to SCP-096's notification).")]
         public Dictionary<RoleType, string> RoleStrings { get; set; } = new Dictionary<RoleType, string>
         {
             [RoleType.ClassD] = "Class-D Personnel",

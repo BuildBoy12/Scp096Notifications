@@ -1,48 +1,50 @@
-﻿using Exiled.API.Enums;
-using Exiled.API.Features;
-using System;
-
-using Events = Exiled.Events.Handlers;
-
-namespace Scp096Notifications
+﻿namespace Scp096Notifications
 {
+    using System;
+    using Exiled.API.Features;
+    using Events = Exiled.Events.Handlers;
+
+    /// <summary>
+    /// The main plugin class.
+    /// </summary>
     public class Plugin : Plugin<Config>
     {
-        public override string Name { get; } = "Scp096Notifications";
+        private static readonly Plugin InstanceValue = new Plugin();
 
-        public override string Author { get; } = "Thunder";
-
-        public override Version Version { get; } = new Version(1, 0, 4);
-
-        public override Version RequiredExiledVersion { get; } = new Version(2, 1, 18);
-
-        public override PluginPriority Priority => PluginPriority.Low;
-
-        public static Plugin Singleton;
-        private static EventHandlers Handler;
-
-        public override void OnEnabled()
+        private Plugin()
         {
-
-            if (!Config.IsEnabled) return;
-            Singleton = new Plugin();
-            Handler = new EventHandlers(this);
-            base.OnEnabled();
-
-            // Events
-            Events.Scp096.AddingTarget += Handler.Scp096AddingTarget;
         }
 
+        /// <summary>
+        /// Gets a static instance of the <see cref="Plugin"/> class.
+        /// </summary>
+        public static Plugin Instance { get; } = InstanceValue;
+
+        /// <inheritdoc />
+        public override string Name { get; } = "Scp096Notifications";
+
+        /// <inheritdoc />
+        public override string Author { get; } = "Thunder";
+
+        /// <inheritdoc />
+        public override Version Version { get; } = new Version(1, 0, 4);
+
+        /// <inheritdoc />
+        public override Version RequiredExiledVersion { get; } = new Version(2, 10, 0);
+
+        /// <inheritdoc/>
+        public override void OnEnabled()
+        {
+            EventHandlers.Config = this.Config;
+            Events.Scp096.AddingTarget += EventHandlers.OnAddingTarget;
+            base.OnEnabled();
+        }
+
+        /// <inheritdoc/>
         public override void OnDisabled()
         {
-
-            if (!Config.IsEnabled) return;
-            Singleton = null;
-            Handler = null;
+            Events.Scp096.AddingTarget -= EventHandlers.OnAddingTarget;
             base.OnDisabled();
-
-            // Events
-            Events.Scp096.AddingTarget -= Handler.Scp096AddingTarget;
         }
     }
 }

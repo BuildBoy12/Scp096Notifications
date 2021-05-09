@@ -1,30 +1,40 @@
-﻿using Exiled.API.Features;
-using Exiled.Events.EventArgs;
-
-using System.Collections.Generic;
-
-namespace Scp096Notifications
+﻿namespace Scp096Notifications
 {
-    public class EventHandlers
+#pragma warning disable SA1118
+    using System;
+    using Exiled.Events.EventArgs;
+
+    /// <summary>
+    /// Contains methods which use events from <see cref="Exiled.Events.Handlers"/>.
+    /// </summary>
+    public static class EventHandlers
     {
-        
-        private Plugin plugin;
-        public EventHandlers(Plugin plugin) { this.plugin = plugin; }
-        public void Scp096AddingTarget(AddingTargetEventArgs ev)
+        /// <summary>
+        /// Gets an instance of the <see cref="Scp096Notifications.Config"/> class.
+        /// </summary>
+        public static Config Config { get; internal set; }
+
+        /// <inheritdoc cref="Exiled.Events.Handlers.Scp096.OnAddingTarget(AddingTargetEventArgs)"/>
+        public static void OnAddingTarget(AddingTargetEventArgs ev)
         {
-            if (ev.Target.Team == Team.SCP) return;
-            
-            if (plugin.Config.Enable096SeenMessage)
+            if (Config.Enable096SeenMessage)
             {
-                ShowMessage(ev.Target, plugin.Config.Scp096SeenMessage, 5f);
+                ev.Target.ShowHint(Config.Scp096SeenMessage, 5f);
             }
-            if (plugin.Config.Enable096NewTargetMessage)
+
+            if (Config.Enable096NewTargetMessage)
             {
-                string message = plugin.Config.Scp096NewTargetMessage.Replace("{name}", ev.Target.Nickname).Replace("{class}", $"<color={ev.Target.RoleColor.ToHex()}>{plugin.Config.RoleStrings[ev.Target.Role]}</color>");
-                ShowMessage(ev.Scp096, message, 5f);
+                if (!Config.RoleStrings.TryGetValue(ev.Target.Role, out string translatedRole))
+                    translatedRole = ev.Target.Role.ToString();
+
+                string message = Config.Scp096NewTargetMessage.ReplaceAfterToken('$', new[]
+                {
+                    new Tuple<string, object>("name", ev.Target.Nickname),
+                    new Tuple<string, object>("class", $"<color={ev.Target.RoleColor.ToHex()}>{translatedRole}</color>"),
+                });
+
+                ev.Scp096.ShowHint(message, 5f);
             }
         }
-
-        public void ShowMessage(Player Ply, string Message, float Duration = 3) => Ply.ShowHint(Message, Duration);
     }
 }
