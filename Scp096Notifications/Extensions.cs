@@ -2,6 +2,7 @@ namespace Scp096Notifications
 {
     using System;
     using System.Text;
+    using Exiled.API.Features;
     using NorthwoodLib.Pools;
 
     /// <summary>
@@ -9,6 +10,13 @@ namespace Scp096Notifications
     /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// Gets a value indicating whether the player is a NPC.
+        /// </summary>
+        /// <param name="player">The player to check.</param>
+        /// <returns>Whether the player is a NPC.</returns>
+        public static bool IsNpc(this Player player) => player.SessionVariables.ContainsKey("IsNPC");
+
         /// <summary>
         /// Optimized method that replaces a <see cref="string"/> based on an <see cref="Tuple{T,T}"/>.
         /// </summary>

@@ -24,7 +24,7 @@
         public override string Name { get; } = "Scp096Notifications";
 
         /// <inheritdoc />
-        public override string Author { get; } = "Thunder, version by Build";
+        public override string Author { get; } = "Build";
 
         /// <inheritdoc />
         public override Version RequiredExiledVersion { get; } = new Version(2, 10, 0);

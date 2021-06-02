@@ -17,6 +17,9 @@
         /// <inheritdoc cref="Exiled.Events.Handlers.Scp096.OnAddingTarget(AddingTargetEventArgs)"/>
         public static void OnAddingTarget(AddingTargetEventArgs ev)
         {
+            if (ev.Target.IsNpc() || ev.Scp096.IsNpc())
+                return;
+
             if (Config.Enable096SeenMessage)
             {
                 ev.Target.ShowHint(Config.Scp096SeenMessage, 5f);
