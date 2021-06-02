@@ -1,3 +1,10 @@
+// -----------------------------------------------------------------------
+// <copyright file="Extensions.cs" company="Build">
+// Copyright (c) Build. All rights reserved.
+// Licensed under the CC BY-SA 3.0 license.
+// </copyright>
+// -----------------------------------------------------------------------
+
 namespace Scp096Notifications
 {
     using System;
