@@ -14,30 +14,33 @@ namespace Scp096Notifications
     /// <summary>
     /// Contains methods which use events from <see cref="Exiled.Events.Handlers"/>.
     /// </summary>
-    public static class EventHandlers
+    public class EventHandlers
     {
+        private readonly Config config;
+
         /// <summary>
-        /// Gets an instance of the <see cref="Scp096Notifications.Config"/> class.
+        /// Initializes a new instance of the <see cref="EventHandlers"/> class.
         /// </summary>
-        public static Config Config { get; internal set; }
+        /// <param name="config">An instance of the <see cref="Config"/> class.</param>
+        public EventHandlers(Config config) => this.config = config;
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Scp096.OnAddingTarget(AddingTargetEventArgs)"/>
-        public static void OnAddingTarget(AddingTargetEventArgs ev)
+        public void OnAddingTarget(AddingTargetEventArgs ev)
         {
             if (ev.Target.IsNpc() || ev.Scp096.IsNpc())
                 return;
 
-            if (Config.Enable096SeenMessage)
+            if (config.Enable096SeenMessage)
             {
-                ev.Target.ShowHint(Config.Scp096SeenMessage, 5f);
+                ev.Target.ShowHint(config.Scp096SeenMessage, 5f);
             }
 
-            if (Config.Enable096NewTargetMessage)
+            if (config.Enable096NewTargetMessage)
             {
-                if (!Config.RoleStrings.TryGetValue(ev.Target.Role, out string translatedRole))
+                if (!config.RoleStrings.TryGetValue(ev.Target.Role, out string translatedRole))
                     translatedRole = ev.Target.Role.ToString();
 
-                string message = Config.Scp096NewTargetMessage.ReplaceAfterToken('$', new[]
+                string message = config.Scp096NewTargetMessage.ReplaceAfterToken('$', new[]
                 {
                     new Tuple<string, object>("name", ev.Target.Nickname),
                     new Tuple<string, object>("class", $"<color={ev.Target.RoleColor.ToHex()}>{translatedRole}</color>"),

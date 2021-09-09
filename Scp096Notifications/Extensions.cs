@@ -34,9 +34,7 @@ namespace Scp096Notifications
         public static string ReplaceAfterToken(this string source, char token, Tuple<string, object>[] valuePairs)
         {
             if (valuePairs == null)
-            {
                 throw new ArgumentNullException(nameof(valuePairs));
-            }
 
             StringBuilder builder = StringBuilderPool.Shared.Rent();
 

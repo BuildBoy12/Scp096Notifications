@@ -16,17 +16,6 @@ namespace Scp096Notifications
     /// </summary>
     public class Plugin : Plugin<Config>
     {
-        private static readonly Plugin InstanceValue = new Plugin();
-
-        private Plugin()
-        {
-        }
-
-        /// <summary>
-        /// Gets a static instance of the <see cref="Plugin"/> class.
-        /// </summary>
-        public static Plugin Instance { get; } = InstanceValue;
-
         /// <inheritdoc />
         public override string Name { get; } = "Scp096Notifications";
 
@@ -34,14 +23,18 @@ namespace Scp096Notifications
         public override string Author { get; } = "Build";
 
         /// <inheritdoc />
-        public override Version RequiredExiledVersion { get; } = new Version(2, 10, 0);
+        public override Version RequiredExiledVersion { get; } = new Version(3, 0, 0);
+
+        /// <summary>
+        /// Gets an instance of the <see cref="Scp096Notifications.EventHandlers"/> class.
+        /// </summary>
+        public EventHandlers EventHandlers { get; private set; }
 
         /// <inheritdoc/>
         public override void OnEnabled()
         {
-            EventHandlers.Config = this.Config;
+            EventHandlers = new EventHandlers(Config);
             Events.Scp096.AddingTarget += EventHandlers.OnAddingTarget;
-            Events.Server.ReloadedConfigs += OnReloadedConfigs;
             base.OnEnabled();
         }
 
@@ -49,10 +42,8 @@ namespace Scp096Notifications
         public override void OnDisabled()
         {
             Events.Scp096.AddingTarget -= EventHandlers.OnAddingTarget;
-            Events.Server.ReloadedConfigs -= OnReloadedConfigs;
+            EventHandlers = null;
             base.OnDisabled();
         }
-
-        private void OnReloadedConfigs() => EventHandlers.Config = this.Config;
     }
 }
