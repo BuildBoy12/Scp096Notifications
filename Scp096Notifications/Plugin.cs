@@ -23,7 +23,7 @@ namespace Scp096Notifications
         public override string Author { get; } = "Build";
 
         /// <inheritdoc />
-        public override Version RequiredExiledVersion { get; } = new Version(3, 0, 0);
+        public override Version RequiredExiledVersion { get; } = new Version(3, 0, 5);
 
         /// <summary>
         /// Gets an instance of the <see cref="Scp096Notifications.EventHandlers"/> class.
