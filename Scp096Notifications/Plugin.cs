@@ -16,33 +16,30 @@ namespace Scp096Notifications
     /// </summary>
     public class Plugin : Plugin<Config>
     {
-        /// <inheritdoc />
-        public override string Name { get; } = "Scp096Notifications";
+        private EventHandlers eventHandlers;
 
         /// <inheritdoc />
-        public override string Author { get; } = "Build";
+        public override string Name => "Scp096Notifications";
 
         /// <inheritdoc />
-        public override Version RequiredExiledVersion { get; } = new Version(3, 0, 5);
+        public override string Author => "Build";
 
-        /// <summary>
-        /// Gets an instance of the <see cref="Scp096Notifications.EventHandlers"/> class.
-        /// </summary>
-        public EventHandlers EventHandlers { get; private set; }
+        /// <inheritdoc />
+        public override Version RequiredExiledVersion { get; } = new Version(5, 0, 0);
 
         /// <inheritdoc/>
         public override void OnEnabled()
         {
-            EventHandlers = new EventHandlers(Config);
-            Events.Scp096.AddingTarget += EventHandlers.OnAddingTarget;
+            eventHandlers = new EventHandlers(this);
+            Events.Scp096.AddingTarget += eventHandlers.OnAddingTarget;
             base.OnEnabled();
         }
 
         /// <inheritdoc/>
         public override void OnDisabled()
         {
-            Events.Scp096.AddingTarget -= EventHandlers.OnAddingTarget;
-            EventHandlers = null;
+            Events.Scp096.AddingTarget -= eventHandlers.OnAddingTarget;
+            eventHandlers = null;
             base.OnDisabled();
         }
     }

@@ -8,7 +8,6 @@
 namespace Scp096Notifications
 {
 #pragma warning disable SA1118
-    using System;
     using Exiled.Events.EventArgs;
 
     /// <summary>
@@ -16,35 +15,35 @@ namespace Scp096Notifications
     /// </summary>
     public class EventHandlers
     {
-        private readonly Config config;
+        private readonly Plugin plugin;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventHandlers"/> class.
         /// </summary>
-        /// <param name="config">An instance of the <see cref="Config"/> class.</param>
-        public EventHandlers(Config config) => this.config = config;
+        /// <param name="plugin">An instance of the <see cref="Plugin"/> class.</param>
+        public EventHandlers(Plugin plugin) => this.plugin = plugin;
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Scp096.OnAddingTarget(AddingTargetEventArgs)"/>
         public void OnAddingTarget(AddingTargetEventArgs ev)
         {
-            if (ev.Target.IsNpc() || ev.Scp096.IsNpc())
+            if (ev.Target == null ||
+                ev.Target.SessionVariables.ContainsKey("IsNPC") ||
+                ev.Scp096.SessionVariables.ContainsKey("IsNPC"))
                 return;
 
-            if (config.Enable096SeenMessage)
+            if (plugin.Config.Enable096SeenMessage)
             {
-                ev.Target.ShowHint(config.Scp096SeenMessage, 5f);
+                ev.Target.ShowHint(plugin.Config.Scp096SeenMessage, 5f);
             }
 
-            if (config.Enable096NewTargetMessage)
+            if (plugin.Config.Enable096NewTargetMessage)
             {
-                if (!config.RoleStrings.TryGetValue(ev.Target.Role, out string translatedRole))
+                if (!plugin.Config.RoleStrings.TryGetValue(ev.Target.Role, out string translatedRole))
                     translatedRole = ev.Target.Role.ToString();
 
-                string message = config.Scp096NewTargetMessage.ReplaceAfterToken('$', new[]
-                {
-                    new Tuple<string, object>("name", ev.Target.Nickname),
-                    new Tuple<string, object>("class", $"<color={ev.Target.RoleColor.ToHex()}>{translatedRole}</color>"),
-                });
+                string message = plugin.Config.Scp096NewTargetMessage
+                    .Replace("$name", ev.Target.Nickname)
+                    .Replace("$class", $"<color={ev.Target.Role.Color.ToHex()}>{translatedRole}</color>");
 
                 ev.Scp096.ShowHint(message, 5f);
             }
